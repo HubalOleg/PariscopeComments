@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PariscopeComments</string>
+    <string name="user_name"> \@user_name </string>
+</resources>
