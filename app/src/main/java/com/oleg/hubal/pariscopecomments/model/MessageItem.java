@@ -4,17 +4,17 @@ package com.oleg.hubal.pariscopecomments.model;
  * Created by User on 07.12.2016.
  */
 
-public class CommentItem {
+public class MessageItem {
 
     private String message;
     private String imageUri;
     private String userName;
 
-    public CommentItem() {
+    public MessageItem() {
 
     }
 
-    public CommentItem(String message, String imageUri, String userName) {
+    public MessageItem(String message, String imageUri, String userName) {
         this.message = message;
         this.imageUri = imageUri;
         this.userName = userName;

@@ -17,8 +17,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.oleg.hubal.pariscopecomments.adapter.CommentsAdapter;
-import com.oleg.hubal.pariscopecomments.model.CommentItem;
+import com.oleg.hubal.pariscopecomments.adapter.MessageAdapter;
+import com.oleg.hubal.pariscopecomments.model.MessageItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String imageUri = "http://pre11.deviantart.net/eeb3/th/pre/i/2009/299/d/2/big_sur_ocean_view_vertical_by_leitmotif.jpg";
 
-    private CommentsAdapter mCommentsAdapter;
+    private MessageAdapter mMessageAdapter;
     private LinearLayoutManager mLinearLayoutManager;
 
     @BindView(R.id.iv_stream_simulator)
@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
     EditText mMessageEditText;
     @BindView(R.id.btn_send_message)
     ImageButton mSendMessageImageButton;
-    @BindView(R.id.rv_comments)
-    RecyclerView mCommentsRecyclerView;
+    @BindView(R.id.rv_messages)
+    RecyclerView mMessageRecyclerView;
 
-    private CommentsAdapter.InsertMessageListener mInsertMessageListener = new CommentsAdapter.InsertMessageListener() {
+    private MessageAdapter.InsertMessageListener mInsertMessageListener = new MessageAdapter.InsertMessageListener() {
         @Override
         public void onMessageInserted(int position) {
             mLinearLayoutManager.scrollToPosition(position);
@@ -54,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
             if ( bottom < oldBottom) {
-                mCommentsRecyclerView.postDelayed(new Runnable() {
+                mMessageRecyclerView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mCommentsRecyclerView.scrollToPosition(mCommentsRecyclerView.getAdapter().getItemCount() - 1);
+                        mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
                     }
                 }, 100);
             }
@@ -81,15 +81,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        mCommentsAdapter = new CommentsAdapter(mInsertMessageListener);
+        mMessageAdapter = new MessageAdapter(MainActivity.this, mInsertMessageListener);
 
-        mLinearLayoutManager = new LinearLayoutManager(MainActivity.this);
+        mLinearLayoutManager = new LinearLayoutManager(MainActivity.this) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+
         mLinearLayoutManager.setStackFromEnd(true);
 
-        mCommentsRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mCommentsRecyclerView.setHasFixedSize(true);
-        mCommentsRecyclerView.setAdapter(mCommentsAdapter);
-        mCommentsRecyclerView.addOnLayoutChangeListener(mOnLayoutChangeListener);
+        mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mMessageRecyclerView.setHasFixedSize(true);
+        mMessageRecyclerView.setNestedScrollingEnabled(false);
+        mMessageRecyclerView.setAdapter(mMessageAdapter);
+        mMessageRecyclerView.addOnLayoutChangeListener(mOnLayoutChangeListener);
     }
 
     @OnClick(R.id.btn_send_message)
@@ -100,7 +107,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (!TextUtils.isEmpty(message)) {
             mMessageEditText.setText("");
-            mCommentsAdapter.addComment(new CommentItem(message, imageUri, userName));
+            mMessageAdapter.addMessage(new MessageItem(message, imageUri, userName));
+        } else {
+            mMessageAdapter.addMessage(new MessageItem("AAA???777??/A", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQmNCk7L76tvylZw_VPB3oYMHUDejqnl4TvgpGhpB4qEJdu1oDh", "SlowPoke"));
         }
     }
 

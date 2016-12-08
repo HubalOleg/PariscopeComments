@@ -22,10 +22,11 @@
             android:scaleType="centerCrop"/>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_comments"
+            android:id="@+id/rv_messages"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/_4sdp"
+            android:layout_alignParentBottom="true"
             android:background="@android:color/transparent"/>
 
     </RelativeLayout>
