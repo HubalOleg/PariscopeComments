@@ -98,7 +98,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         private static final float ALPHA_INVISIBLE = 0f;
         private static final float ALPHA_VISIBLE = 1f;
-        private static final int ANIMATION_DELAY = 3000;
+        private static final int ANIMATION_DELAY = 5000;
 
         private View mHolderView;
         private int mPosition;
@@ -153,7 +153,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
 
         public void onBind(int position, MessageItem messageItem) {
-            stopAnimation();
+            stopFadeOutAnimation();
             mPosition = position;
             mHolderView.setAlpha(ALPHA_VISIBLE);
             isVisible = true;
@@ -173,17 +173,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             mDelayHandler.postDelayed(mRunnableStartAnimation, ANIMATION_DELAY);
         }
 
-        private void stopAnimation() {
-            mDelayHandler.removeCallbacks(mRunnableStartAnimation);
-            mHolderView.clearAnimation();
-            isAnimating = false;
-        }
-
         public void startFadeOutAnimation() {
             if (!isAnimating) {
                 mDelayHandler.removeCallbacks(mRunnableStartAnimation);
                 mHolderView.startAnimation(mFadeOutAnimation);
             }
+        }
+
+        private void stopFadeOutAnimation() {
+            mDelayHandler.removeCallbacks(mRunnableStartAnimation);
+            mHolderView.clearAnimation();
+            isAnimating = false;
         }
 
         public int getBoundPosition() {

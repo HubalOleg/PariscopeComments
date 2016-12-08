@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private static final String imageUri = "http://pre11.deviantart.net/eeb3/th/pre/i/2009/299/d/2/big_sur_ocean_view_vertical_by_leitmotif.jpg";
+    private static final String backgroundImageUri = "http://pre11.deviantart.net/eeb3/th/pre/i/2009/299/d/2/big_sur_ocean_view_vertical_by_leitmotif.jpg";
 
     private MessageAdapter mMessageAdapter;
     private LinearLayoutManager mLinearLayoutManager;
@@ -43,25 +42,12 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mMessageRecyclerView;
 
     private MessageAdapter.InsertMessageListener mInsertMessageListener = new MessageAdapter.InsertMessageListener() {
+
         @Override
         public void onMessageInserted(int position) {
             mLinearLayoutManager.scrollToPosition(position);
         }
 
-    };
-
-    private View.OnLayoutChangeListener mOnLayoutChangeListener = new View.OnLayoutChangeListener() {
-        @Override
-        public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-            if ( bottom < oldBottom) {
-                mMessageRecyclerView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
-                    }
-                }, 100);
-            }
-        }
     };
 
     @Override
@@ -77,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadBackground() {
-        ImageLoader.getInstance().displayImage(imageUri, mStreamSimulatorImageView);
+        ImageLoader.getInstance().displayImage(backgroundImageUri, mStreamSimulatorImageView);
     }
 
     private void initRecyclerView() {
@@ -89,14 +75,10 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         };
-
         mLinearLayoutManager.setStackFromEnd(true);
 
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mMessageRecyclerView.setHasFixedSize(true);
-        mMessageRecyclerView.setNestedScrollingEnabled(false);
         mMessageRecyclerView.setAdapter(mMessageAdapter);
-        mMessageRecyclerView.addOnLayoutChangeListener(mOnLayoutChangeListener);
     }
 
     @OnClick(R.id.btn_send_message)
